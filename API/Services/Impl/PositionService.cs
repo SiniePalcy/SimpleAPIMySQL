@@ -66,7 +66,7 @@ namespace API.Services.Impl
             await DbContext.SaveAsync();
         }
 
-        public async Task CreateAsync(PositionCreateRequest request)
+        public async Task<int> CreateAsync(PositionCreateRequest request)
         {
             var position = await DbContext
                     .Positions
@@ -78,13 +78,15 @@ namespace API.Services.Impl
                 throw new Exception($"Position  with name = '{request.Name} is already exist");
             }
 
-            DbContext.Positions.Add(new Position
+            var entry = DbContext.Positions.Add(new Position
             {
                 Name = request.Name!,
                 Grade = request.Grade!.Value,
             });
 
             await DbContext.SaveAsync();
+
+            return entry.Entity.Id;
         }
     }
 }

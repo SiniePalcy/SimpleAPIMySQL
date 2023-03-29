@@ -8,6 +8,6 @@ namespace API.Services
         Task DeleteAsync(int key);
         Task<Position> GetAsync(int key);
         Task SetAsync(PositionSetRequest request);
-        Task CreateAsync(PositionCreateRequest request);
+        Task<int> CreateAsync(PositionCreateRequest request);
     }
 }

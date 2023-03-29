@@ -1,8 +1,8 @@
 ﻿using API.DbContext;
 using API.Model;
 using API.Requests;
+using API.Responses;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace API.Services.Impl
 {
@@ -27,7 +27,7 @@ namespace API.Services.Impl
             await DbContext.SaveAsync();
         }
 
-        public async Task<Employee> GetAsync(int key)
+        public async Task<EmployeeResponse> GetAsync(int key)
         {
             var employee = await DbContext
                     .Employees
@@ -36,7 +36,16 @@ namespace API.Services.Impl
                 ?? 
                     throw new Exception($"Employee not found by key = {key}");
 
-            return employee;
+            return new EmployeeResponse
+            {
+                FIO = employee.FIO,
+                Birthday = employee.Birthday,
+                Positions = employee.Positions.Select(x => new PositionResponse
+                {
+                    Grage = x.Grade,
+                    Name = x.Name,
+                }).ToList(),
+            };
         }
 
         public async Task SetAsync(EmployeeSetRequest request)
@@ -66,7 +75,7 @@ namespace API.Services.Impl
             await DbContext.SaveAsync();
         }
 
-        public async Task CreateAsync(EmployeeCreateRequest request)
+        public async Task<int> CreateAsync(EmployeeCreateRequest request)
         {
             var employee = await DbContext
                     .Employees
@@ -85,9 +94,11 @@ namespace API.Services.Impl
             };
 
             FillPositionsByIds(employee, request.Positions);
-            DbContext.Employees.Add(employee);
+            var entry = DbContext.Employees.Add(employee);
 
             await DbContext.SaveAsync();
+
+            return entry.Entity.Id;
         }
 
         private void FillPositionsByIds(Employee entity, IEnumerable<int> ids)

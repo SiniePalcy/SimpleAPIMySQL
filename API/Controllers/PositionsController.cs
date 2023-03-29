@@ -40,8 +40,11 @@ namespace API.Controllers
         {
             try
             {
-                await _positionService.CreateAsync(request);
-                return Ok();
+                var id = await _positionService.CreateAsync(request);
+                return Ok(new
+                {
+                    Id = id,
+                });
             }
             catch (Exception ex)
             {

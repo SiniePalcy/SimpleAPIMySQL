@@ -1,13 +1,13 @@
-﻿using API.Model;
-using API.Requests;
+﻿using API.Requests;
+using API.Responses;
 
 namespace API.Services
 {
     public interface IEmployeeService
     {
         Task DeleteAsync(int key);
-        Task<Employee> GetAsync(int key);
+        Task<EmployeeResponse> GetAsync(int key);
         Task SetAsync(EmployeeSetRequest request);
-        Task CreateAsync(EmployeeCreateRequest request);
+        Task<int> CreateAsync(EmployeeCreateRequest request);
     }
 }

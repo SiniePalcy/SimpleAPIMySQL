@@ -39,8 +39,11 @@ namespace API.Controllers
         {
             try
             {
-                await _employeeService.CreateAsync(request);
-                return Ok();
+                var id = await _employeeService.CreateAsync(request);
+                return Ok(new
+                {
+                    Id = id
+                });
             }
             catch (Exception ex)
             {
