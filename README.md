@@ -1,1 +1,1 @@
-# SimpleAPIMySQL
+# Simple API with MySQL
